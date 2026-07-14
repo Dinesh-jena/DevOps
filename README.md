@@ -1,31 +1,55 @@
-1.EC2 SERVER SETUP 
+# 🚀 DevOps Basics - EC2 & Docker Deployment Guide
 
-# Deploying a Node.js Application on AWS EC2
+This guide explains how to:
 
-## Step 1: Create an EC2 Instance
-
-1. Log in to the AWS Management Console.
-2. Open the **EC2 Dashboard**.
-3. Click **Launch Instance**.
-4. Choose **Ubuntu Server**.
-5. Select an instance type (e.g., `t2.micro` for Free Tier).
-6. Create or select an existing **Key Pair (.pem)**.
-7. Configure the Security Group:
-
-   * SSH (Port 22)
-   * HTTP (Port 80) *(Optional)*
-   * Custom TCP (Port 3000) *(For Express applications)*
-8. Launch the instance.
+1. Deploy a simple **Node.js** application on an **AWS EC2 (Ubuntu)** server.
+2. Create a **Docker Image** for the same application.
 
 ---
 
-# Step 2: Connect to the EC2 Instance
+# 📚 Prerequisites
+
+Before starting, make sure you have:
+
+* AWS Account
+* Docker Desktop Installed
+* Node.js Application (`server.js`)
+* `package.json`
+* SSH Key Pair (`.pem`)
+
+---
+
+# Part 1 - Deploy Node.js Application on AWS EC2
+
+## Step 1: Create an EC2 Instance
+
+1. Login to the **AWS Management Console**.
+2. Open the **EC2 Dashboard**.
+3. Click **Launch Instance**.
+4. Select **Ubuntu Server**.
+5. Choose an instance type (Recommended: `t2.micro` - Free Tier).
+6. Create or select an existing **Key Pair (.pem)**.
+7. Configure the Security Group.
+
+Allow the following ports:
+
+| Port | Protocol   | Purpose                |
+| ---- | ---------- | ---------------------- |
+| 22   | SSH        | Remote Login           |
+| 80   | HTTP       | Web Traffic (Optional) |
+| 3000 | Custom TCP | Express.js Application |
+
+Finally, launch the instance.
+
+---
+
+# Step 2: Connect to EC2
 
 ```bash
 ssh -i "hallex-test-1.pem" ubuntu@<EC2-Public-IP>
 ```
 
-Example:
+Example
 
 ```bash
 ssh -i "hallex-test-1.pem" ubuntu@ec2-13-234-19-20.ap-south-1.compute.amazonaws.com
@@ -33,19 +57,19 @@ ssh -i "hallex-test-1.pem" ubuntu@ec2-13-234-19-20.ap-south-1.compute.amazonaws.
 
 ---
 
-# Step 3: Create a Project Directory
+# Step 3: Create Project Directory
 
 ```bash
 mkdir express-project
 ```
 
-Move into the project folder:
+Move inside the folder
 
 ```bash
 cd express-project
 ```
 
-Check the current directory:
+Check current path
 
 ```bash
 pwd
@@ -55,31 +79,31 @@ pwd
 
 # Step 4: Install Node.js
 
-Update the package list:
+Update package list
 
 ```bash
 sudo apt update
 ```
 
-Upgrade installed packages:
+Upgrade packages
 
 ```bash
 sudo apt upgrade -y
 ```
 
-Install Node.js:
+Install Node.js
 
 ```bash
 sudo apt install nodejs -y
 ```
 
-Install npm:
+Install npm
 
 ```bash
 sudo apt install npm -y
 ```
 
-Verify installation:
+Verify installation
 
 ```bash
 node -v
@@ -88,21 +112,21 @@ npm -v
 
 ---
 
-# Step 5: Copy Project Files from Local Machine to EC2
+# Step 5: Copy Project Files to EC2
 
-Copy `package.json`:
+Copy **package.json**
 
 ```bash
 scp -i "hallex-test-1.pem" ./package.json ubuntu@ec2-13-234-19-20.ap-south-1.compute.amazonaws.com:/home/ubuntu/express-project/package.json
 ```
 
-Copy `package-lock.json` (if available):
+Copy **package-lock.json**
 
 ```bash
 scp -i "hallex-test-1.pem" ./package-lock.json ubuntu@ec2-13-234-19-20.ap-south-1.compute.amazonaws.com:/home/ubuntu/express-project/package-lock.json
 ```
 
-Copy `server.js`:
+Copy **server.js**
 
 ```bash
 scp -i "hallex-test-1.pem" ./server.js ubuntu@ec2-13-234-19-20.ap-south-1.compute.amazonaws.com:/home/ubuntu/express-project/server.js
@@ -110,21 +134,21 @@ scp -i "hallex-test-1.pem" ./server.js ubuntu@ec2-13-234-19-20.ap-south-1.comput
 
 ---
 
-# Step 6: Verify Files on EC2
+# Step 6: Verify Project Files
 
-List files:
+List files
 
 ```bash
 ls
 ```
 
-View the contents of `server.js`:
+Check `server.js`
 
 ```bash
 cat server.js
 ```
 
-View the contents of `package.json`:
+Check `package.json`
 
 ```bash
 cat package.json
@@ -132,7 +156,7 @@ cat package.json
 
 ---
 
-# Step 7: Install Project Dependencies
+# Step 7: Install Dependencies
 
 ```bash
 npm install
@@ -140,13 +164,13 @@ npm install
 
 ---
 
-# Step 8: Run the Application
+# Step 8: Start the Application
 
 ```bash
 node server.js
 ```
 
-If everything is correct, you should see:
+Expected Output
 
 ```text
 Server is running on port 3000
@@ -156,81 +180,27 @@ Server is running on port 3000
 
 # Useful Ubuntu Commands
 
-Check current directory:
-
-```bash
-pwd
-```
-
-Create a new folder:
-
-```bash
-mkdir folder-name
-```
-
-Create a new file:
-
-```bash
-touch filename
-```
-
-List files and folders:
-
-```bash
-ls
-```
-
-Change directory:
-
-```bash
-cd folder-name
-```
-
-Go back one directory:
-
-```bash
-cd ..
-```
-
-Remove a file:
-
-```bash
-rm filename
-```
-
-Remove a folder:
-
-```bash
-rm -r folder-name
-```
+| Command             | Description            |
+| ------------------- | ---------------------- |
+| `pwd`               | Show current directory |
+| `ls`                | List files and folders |
+| `mkdir folder-name` | Create a directory     |
+| `touch filename`    | Create a file          |
+| `cd folder-name`    | Enter directory        |
+| `cd ..`             | Go back one directory  |
+| `rm filename`       | Delete a file          |
+| `rm -r folder-name` | Delete a directory     |
 
 ---
 
 # Useful Node.js Commands
 
-Check Node.js version:
-
-```bash
-node -v
-```
-
-Check npm version:
-
-```bash
-npm -v
-```
-
-Install project dependencies:
-
-```bash
-npm install
-```
-
-Start the application:
-
-```bash
-node server.js
-```
+| Command          | Description           |
+| ---------------- | --------------------- |
+| `node -v`        | Check Node.js version |
+| `npm -v`         | Check npm version     |
+| `npm install`    | Install dependencies  |
+| `node server.js` | Start application     |
 
 ---
 
@@ -245,46 +215,51 @@ express-project/
 
 ---
 
-# Deployment Flow
+# EC2 Deployment Flow
 
 ```text
 Local Machine
       │
-      │  scp
+      │  SCP
       ▼
 AWS EC2 (Ubuntu)
       │
-      │  npm install
+      │ npm install
       ▼
 Node.js Application
       │
       ▼
-Server Running on Port 3000
+Running on Port 3000
 ```
-
-
-
-2.DOCKER 
-# Docker - Basic Node.js Application
-
-## Step 1: Install Docker Desktop
-- Download and install Docker Desktop.
-- Complete the setup and make sure Docker Desktop is running.
 
 ---
 
-## Step 2: Create a Dockerfile
+# Part 2 - Docker Basics
 
-Create a file named `Dockerfile` (without any extension) and add the following code:
+## Step 1: Install Docker Desktop
+
+Download and install Docker Desktop.
+
+Verify installation
+
+```bash
+docker --version
+```
+
+---
+
+# Step 2: Create a Dockerfile
+
+Create a file named **Dockerfile**
 
 ```dockerfile
 FROM node:18
-# Base image (Linux OS + Node.js)
+
+# Linux + Node.js Base Image
 
 WORKDIR /app
 
 COPY package*.json ./
-# COPY package-lock.json ./
 
 RUN npm install
 
@@ -292,53 +267,100 @@ COPY server.js ./
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["node","server.js"]
 ```
 
 ---
 
-## Explanation
+# Dockerfile Explanation
 
-- `FROM node:18` → Uses the official Node.js 18 image.
-- `WORKDIR /app` → Sets the working directory inside the container.
-- `COPY package*.json ./` → Copies `package.json` and `package-lock.json`.
-- `RUN npm install` → Installs all dependencies.
-- `COPY server.js ./` → Copies the application file.
-- `EXPOSE 3000` → Exposes port 3000.
-- `CMD ["node", "server.js"]` → Starts the Node.js application.
+| Instruction                | Description                    |
+| -------------------------- | ------------------------------ |
+| `FROM node:18`             | Uses Node.js 18 official image |
+| `WORKDIR /app`             | Creates the working directory  |
+| `COPY package*.json ./`    | Copies package files           |
+| `RUN npm install`          | Installs dependencies          |
+| `COPY server.js ./`        | Copies application source      |
+| `EXPOSE 3000`              | Opens port 3000                |
+| `CMD ["node","server.js"]` | Starts the application         |
 
 ---
 
-## Step 3: Build Docker Image
-
-Run the following command to create a Docker image:
+# Step 3: Build Docker Image
 
 ```bash
 docker build -t <image-name> .
 ```
 
-Example:
+Example
 
 ```bash
 docker build -t halley .
 ```
 
-### Command Breakdown
+### Command Explanation
 
-- `docker build` → Builds a Docker image.
-- `-t` → Assigns a name (tag) to the image.
-- `<image-name>` → Your custom image name (e.g., `halley`).
-- `.` → Uses the current directory as the build context.
+| Option         | Description                        |
+| -------------- | ---------------------------------- |
+| `docker build` | Builds a Docker image              |
+| `-t`           | Assigns a tag/name                 |
+| `halley`       | Image name                         |
+| `.`            | Current directory as build context |
 
-After the build is successful, a Docker image is created and stored in your local Docker images.
+After the build completes successfully, Docker creates an image and stores it locally.
 
 ---
 
-## Step 4: Verify the Image
-<img width="737" height="491" alt="image" src="https://github.com/user-attachments/assets/95508d49-7b20-4789-8c9b-1b6484d89dd1" />
+# Step 4: Verify Docker Images
 
 ```bash
 docker images
 ```
 
-This command displays all Docker images stored on your system.
+This command lists all Docker images available on your local machine.
+
+*(Add your screenshot below if required.)*
+
+```text
+docker images
+```
+
+📷 Screenshot:
+
+![Docker Images](https://github.com/user-attachments/assets/95508d49-7b20-4789-8c9b-1b6484d89dd1)
+
+---
+
+# Docker Workflow
+
+```text
+Project Files
+      │
+      ▼
+Dockerfile
+      │
+docker build
+      │
+      ▼
+Docker Image
+      │
+docker run
+      │
+      ▼
+Docker Container
+      │
+      ▼
+Node.js Application Running
+```
+
+---
+
+# Next Steps
+
+After creating the Docker image, you can:
+
+* Run the image as a Docker Container.
+* Push the image to Docker Hub.
+* Pull the image on another machine.
+* Deploy the container on an AWS EC2 server.
+* Use Docker Compose for multi-container applications.
