@@ -69,6 +69,7 @@ After the build is successful, a Docker image is created and stored in your loca
 ---
 
 ## Step 4: Verify the Image
+<img width="737" height="491" alt="image" src="https://github.com/user-attachments/assets/95508d49-7b20-4789-8c9b-1b6484d89dd1" />
 
 ```bash
 docker images
